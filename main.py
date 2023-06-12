@@ -47,9 +47,7 @@ def generate_distance_matrix():
 
 
 # Method to find the distance between 2 addresses given the package it's associated with
-def find_distance(package1, package2):
-    address1 = package1.address
-    address2 = package2.address
+def find_distance(address1, address2):
     address1_index = None
     address2_index = None
     for index1, entry1 in enumerate(addresses):
@@ -68,24 +66,23 @@ def find_distance(package1, package2):
     return float(distance)
 
 
-def deliver_packages(truck, find_distance):
-    not_delivered = truck.packages
-
+def deliver_packages(truck):
+    not_delivered = []
+    for package in truck.packages:
+        not_delivered.append(package)
     truck.packages.clear()
-
     while len(not_delivered) > 0:
         next_distance = float(9000)
         next_package = None
         for package in not_delivered:
-            distance = find_distance(truck.address, package.address)
-            if distance <= next_distance:
-                next_distance = distance
+            if find_distance(truck.address, package.address) <= next_distance:
+                next_distance = find_distance(truck.address, package.address)
                 next_package = package
+                package.delivery_status = "En Route"
         truck.packages.append(next_package)
+        not_delivered.remove(next_package)
         truck.mileage += next_distance
         truck.address = next_package.address
-        truck.departure_time += datetime.timedelta(hours=next_distance / 18)
-        next_package.delivery_status = "Delivered"
 
 
 package_map = HashMap()
@@ -93,6 +90,16 @@ load_package_data(package_map)
 distances = load_distance_data()
 addresses, indexes = load_address_data()
 distance_matrix = generate_distance_matrix()
+
+
+
+
+
+
+
+
+
+
 
 truck1 = Truck(16, None,
                [package_map.lookup(package_id) for package_id in [1, 13, 14, 15, 16, 20, 29, 30, 31, 34, 37, 40]], 18,
@@ -105,6 +112,12 @@ truck3 = Truck(16, None,
                [package_map.lookup(package_id) for package_id in [2, 4, 5, 6, 7, 8, 9, 10, 11, 25, 28, 32, 33]], 18, 0,
                '4001 South 700 East',
                datetime.timedelta(hours=8, minutes=0))
-
+print("TRUCK after SORTING")
 for package in truck1.packages:
     print(package)
+deliver_packages(truck1)
+print("TRUCK after delivery")
+for package in truck1.packages:
+    print(package)
+#deliver_packages(truck2) # truck is throwing an error because one of the addresses is incorect
+deliver_packages(truck3)

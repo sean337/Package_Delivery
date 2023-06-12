@@ -8,6 +8,7 @@ class Truck:
         self.address = address
         self.departure_time = departure_time
         self.delivered_packages = []
+        self.current_package = None
 
     # Loads packages into the truck and adjusts the load size so that it doesn't exceed the max size for that truck
     def load_packages(self, package):

@@ -1,6 +1,6 @@
 class Package:
     def __init__(self, ID, address, city, state, postal_code, delivery_deadline, weight, delivery_status):
-        self.ID = ID
+        self.ID = int(ID)
         self.weight = int(weight)
         self.address = address
         self.city = city
