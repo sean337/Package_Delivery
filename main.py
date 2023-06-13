@@ -66,23 +66,38 @@ def find_distance(address1, address2):
     return float(distance)
 
 
+# Take a group of package IDs to manually load on the truck. Loads the truck in the properly sorted order
+def load_truck(truck, package_ID_group):
+    for package_ID in package_ID_group:
+        truck.load_packages(package_map.lookup(int(package_ID)))
+
+
 def deliver_packages(truck):
-    not_delivered = []
+    sorting_package_list = []
     for package in truck.packages:
-        not_delivered.append(package)
+        sorting_package_list.append(package)
     truck.packages.clear()
-    while len(not_delivered) > 0:
-        next_distance = float(9000)
+    while len(sorting_package_list) > 0:
+        next_distance = float("inf")
         next_package = None
-        for package in not_delivered:
+        for package in sorting_package_list:
             if find_distance(truck.address, package.address) <= next_distance:
                 next_distance = find_distance(truck.address, package.address)
                 next_package = package
-                package.delivery_status = "En Route"
+                package.update_status(truck.travel_time)
+                print(f"Pack Status: {package.delivery_status}")
         truck.packages.append(next_package)
-        not_delivered.remove(next_package)
-        truck.mileage += next_distance
-        truck.address = next_package.address
+        print(f"Pack Status: {package.delivery_status}")
+        truck.move_to(next_package.address, next_distance)
+        truck.travel_time += datetime.timedelta(hours=next_distance / 18)
+        sorting_package_list.remove(next_package)
+        truck.deliver_package(next_package)
+        delivered_packages.append(next_package)
+        print(f"current mileage: {truck.mileage}")
+        print(f"current address: {truck.address}")
+        print(f"current time: {truck.travel_time}")
+        print(f"Pack Status: {package.delivery_status}")
+        print(" ")
 
 
 package_map = HashMap()
@@ -90,34 +105,19 @@ load_package_data(package_map)
 distances = load_distance_data()
 addresses, indexes = load_address_data()
 distance_matrix = generate_distance_matrix()
+delivered_packages = []
+
+truck1 = Truck(16, 0, [], 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0))
+truck2 = Truck(16, 0, [], 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0))
+truck3 = Truck(16, 0, [], 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0))
+
+package_group1 = [1, 13, 14, 15, 16, 20, 29, 30, 31, 34, 37, 40]
+package_group2 = [3, 6, 12, 17, 18, 19, 21, 22, 23, 24, 26, 27, 35, 36, 38, 39]
+package_group3 = [2, 4, 5, 7, 8, 9, 10, 11, 25, 28, 32, 33]
+
+load_truck(truck1, package_group1)
 
 
-
-
-
-
-
-
-
-
-
-truck1 = Truck(16, None,
-               [package_map.lookup(package_id) for package_id in [1, 13, 14, 15, 16, 20, 29, 30, 31, 34, 37, 40]], 18,
-               0, '4001 South 700 East',
-               datetime.timedelta(hours=8, minutes=0))
-truck2 = Truck(16, None, [package_map.lookup(package_id) for package_id in
-                          [3, 6, 12, 17, 18, 19, 21, 22, 23, 24, 26, 27, 35, 36, 38, 39]], 18, 0, '4001 South 700 East',
-               datetime.timedelta(hours=8, minutes=0))
-truck3 = Truck(16, None,
-               [package_map.lookup(package_id) for package_id in [2, 4, 5, 6, 7, 8, 9, 10, 11, 25, 28, 32, 33]], 18, 0,
-               '4001 South 700 East',
-               datetime.timedelta(hours=8, minutes=0))
-print("TRUCK after SORTING")
-for package in truck1.packages:
-    print(package)
 deliver_packages(truck1)
-print("TRUCK after delivery")
-for package in truck1.packages:
-    print(package)
-#deliver_packages(truck2) # truck is throwing an error because one of the addresses is incorect
+truck3.departure_time = truck1.travel_time
 deliver_packages(truck3)

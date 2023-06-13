@@ -1,14 +1,13 @@
 class Truck:
-    def __init__(self, max_size, load_size, packages, speed, mileage, address, departure_time):
+    def __init__(self, max_size, load_size, packages, speed, mileage, address, travel_time):
         self.max_size = max_size
         self.load_size = load_size
         self.packages = packages
         self.speed = speed
         self.mileage = mileage
         self.address = address
-        self.departure_time = departure_time
+        self.travel_time = travel_time
         self.delivered_packages = []
-        self.current_package = None
 
     # Loads packages into the truck and adjusts the load size so that it doesn't exceed the max size for that truck
     def load_packages(self, package):
@@ -24,13 +23,15 @@ class Truck:
         self.address = new_address
         self.mileage += distance
 
-    # Removes Package from truck
+    # Removes Package from truck and marks the package status as delivered and marks delivery time
     def deliver_package(self, package):
         self.packages.remove(package)
+        package.delivery_status = "Delivered!"
+        package.delivery_time = self.travel_time
 
     def __str__(self):
         return "%s, %s, %s, %s, %s, %s, %s" % \
                (
                    self.max_size, self.load_size, self.packages, self.speed, self.mileage, self.address,
-                   self.departure_time
+                   self.travel_time
                )
