@@ -6,8 +6,8 @@ user_input = None
 print("WGUPS Tracking System\n")
 while user_input != "quit":
     simulation = SimulateDelivery()
-    print(f"The route was completed in: "
-          f"{simulation.truck1.mileage + simulation.truck2.mileage + simulation.truck3.mileage} miles.\n")
+    print(f"This route was completed in: "
+          f"{round(simulation.truck1.mileage + simulation.truck2.mileage + simulation.truck3.mileage, 2)} miles.\n")
     user_input = input(
         "Enter [1] to get info for all packages at a particular time, \n"
         "Enter [2] to see the information for a single package at a particular time,\n"
@@ -17,7 +17,7 @@ while user_input != "quit":
         (h, m, s) = user_input.split(":")
         convert_time = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
 
-        for package_id in range(1, 40):
+        for package_id in range(1, 41):
             package = simulation.package_map.lookup(package_id)
             package.update_status(convert_time)
             print(str(package))

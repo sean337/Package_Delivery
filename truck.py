@@ -8,13 +8,16 @@ class Truck:
         self.address = address
         self.departure_time = departure_time
         self.total_travel_time = total_travel_time
+        self.current_time = departure_time
         self.package_sorting_list = []
         self.delivered_packages = []
 
     # Loads packages into the truck and adjusts the load size so that it doesn't exceed the max size for that truck
     def load_packages(self, package):
         if self.load_size < self.max_size:
-            self.packages.append(package)  # Adds the package to the empty package list
+            self.packages.append(package) # Adds the package to the empty package list
+            package.departure_time = self.departure_time
+            # package.delivery_status = "In Transit"
             self.load_size += 1  # Increase the load size by 1
 
         else:
@@ -28,7 +31,6 @@ class Truck:
     # Removes Package from truck and marks the package status as delivered and marks delivery time
     def deliver_package(self, package):
         self.packages.remove(package)
-        package.delivery_status = "Delivered!"
         package.delivery_time = self.departure_time
 
     def __str__(self):

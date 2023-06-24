@@ -10,17 +10,16 @@ from truck import Truck
 class SimulateDelivery:
     def __init__(self):
         self.package_map = HashMap()
-        self.load_package_data()
-        self.distances = self.load_distance_data()
-        self.addresses, self.indexes = self.load_address_data()
+        self.load_package_map()
+        self.addresses, self.indexes, self.distances = self.generate_lists()
         self.distance_matrix = self.generate_distance_matrix()
         self.delivered_packages = []
 
-        self.truck1 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0),
+        self.truck1 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=8),
                             datetime.timedelta())
-        self.truck2 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0),
+        self.truck2 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=10, minutes=20),
                             datetime.timedelta())
-        self.truck3 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=8, minutes=0),
+        self.truck3 = Truck(16, 0, 18, 0, '4001 South 700 East', datetime.timedelta(hours=9, minutes=5),
                             datetime.timedelta())
 
         self.package_id_group1 = [1, 13, 14, 15, 16, 20, 29, 30, 31, 34, 37, 40]
@@ -43,28 +42,26 @@ class SimulateDelivery:
             return list(csv_object)
 
     # Creates a hashmap with the package id being the key and value being the package details
-    def load_package_data(self):
+    def load_package_map(self):
         package_info = self.csv_to_list("csv_files/packages.csv")
         for list_item in package_info:
             package = Package(list_item[0], list_item[1], list_item[2], list_item[3], list_item[4], list_item[5],
-                              list_item[6], "At Hub")
+                              list_item[6])
+            package.delivery_status = "At the hub"
             self.package_map.insert(package.id, package)
 
-    def load_address_data(self):
+    def generate_lists(self):
         address_info = self.csv_to_list("csv_files/addresses.csv")
         address_list = []
         address_indexes = {}
         for i, item in enumerate(address_info):
             address_list.append(item)
             address_indexes[i] = item[0]
-        return address_list, address_indexes
-
-    def load_distance_data(self):
         distance_info = self.csv_to_list("csv_files/distances.csv")
         distance_list = []
         for item in distance_info:
             distance_list.append(item)
-        return distance_list
+        return address_list, address_indexes, distance_list
 
     def generate_distance_matrix(self):
         address_distance_list = []
@@ -95,7 +92,8 @@ class SimulateDelivery:
     # Take a group of package IDs to manually load on the truck. Loads the truck in the properly sorted order
     def load_truck(self, truck, package_id_group):
         for package_ID in package_id_group:
-            truck.load_packages(self.package_map.lookup(int(package_ID)))
+            package = self.package_map.lookup(int(package_ID))
+            truck.load_packages(package)
 
     # Finds the shortest route to the next package
     def deliver_packages(self, truck):
@@ -103,24 +101,22 @@ class SimulateDelivery:
             truck.package_sorting_list.append(package)
         truck.packages.clear()
 
-        current_time = truck.departure_time
-
         while len(truck.package_sorting_list) > 0:
             next_distance = float("inf")
             next_package = None
             for package in truck.package_sorting_list:
-
-                if self.find_distance(truck.address, package.address) <= next_distance:
+                if self.find_distance(truck.address, package.address) < next_distance:
                     next_distance = self.find_distance(truck.address, package.address)
                     next_package = package
 
             truck.packages.append(next_package)
-
             truck.move_to(next_package.address, next_distance)
             time_traveled = datetime.timedelta(hours=next_distance / 18)
-            truck.total_travel_time += time_traveled
-            current_time += time_traveled
             truck.package_sorting_list.remove(next_package)
             truck.deliver_package(next_package)
             truck.delivered_packages.append(next_package)
-            # delivered_packages.append(next_package)
+            truck.current_time += time_traveled
+            truck.total_travel_time += time_traveled
+            next_package.delivery_time = truck.current_time
+            next_package.depature_time = truck.departure_time
+
