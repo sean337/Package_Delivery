@@ -1,6 +1,7 @@
 import datetime
 
 
+# This class will create a Package object
 class Package:
     def __init__(self, id, address, city, state, postal_code, delivery_deadline, weight):
         self.id = int(id)
@@ -10,7 +11,10 @@ class Package:
         self.state = state
         self.postal_code = postal_code
         self.delivery_status = "Pending..."
-
+        '''
+        This line determines the priority of the package. We can use this to add a feature later that takes the package
+        #priority into consideration
+        '''
         if delivery_deadline != 'EOD':
             self.delivery_deadline = datetime.datetime.strptime(delivery_deadline.strip(), '%I:%M %p').time()
             self.high_priority = True
@@ -22,6 +26,7 @@ class Package:
         self.departure_time = None
         self.delivery_time = None
 
+    # This method will update the delivery status of the package based on the current time
     def update_status(self, current_time):
         if self.delivery_time < current_time:
             self.delivery_status = "Delivered"

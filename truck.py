@@ -1,3 +1,4 @@
+# This class creates a Truck object
 class Truck:
     def __init__(self, max_size, load_size, speed, mileage, address, departure_time, total_travel_time):
         self.max_size = max_size
@@ -15,7 +16,7 @@ class Truck:
     # Loads packages into the truck and adjusts the load size so that it doesn't exceed the max size for that truck
     def load_packages(self, package):
         if self.load_size < self.max_size:
-            self.packages.append(package) # Adds the package to the empty package list
+            self.packages.append(package)  # Adds the package to the empty package list
             package.departure_time = self.departure_time
             # package.delivery_status = "In Transit"
             self.load_size += 1  # Increase the load size by 1
