@@ -36,6 +36,7 @@ class SimulateDelivery:
 
         self.deliver_packages(self.truck1)
         self.deliver_packages(self.truck2)
+        # Makes sure the third truck doesn't leave until one of the first 2 gets back. This simulates 2 drivers.
         self.truck3.departure_time = min(self.truck1.total_travel_time, self.truck2.total_travel_time)
         self.deliver_packages(self.truck3)
 
@@ -107,10 +108,13 @@ class SimulateDelivery:
         for package in truck.packages:
             truck.package_sorting_list.append(package)
         truck.packages.clear()
-        # Adds the nearest neighbor back to the truck
+        # Adds the nearest neighbor back to the truck.
         while len(truck.package_sorting_list) > 0:
+            # The next distance is set to infinity
             next_distance = float("inf")
+            # The next package is set to none
             next_package = None
+            # This loop compares the distance between the trucks current location against the packages left in the list
             for package in truck.package_sorting_list:
                 if self.find_distance(truck.address, package.address) < next_distance:
                     next_distance = self.find_distance(truck.address, package.address)

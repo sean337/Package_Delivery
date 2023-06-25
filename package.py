@@ -36,7 +36,11 @@ class Package:
             self.delivery_status = "At Hub"
 
     def __str__(self):
-        return "Package ID: %s,Delivery Address: %s, %s, %s, %s, %s,Delivery Deadline: %s," \
-               " High Priority?: %s,\nDelivery Status: %s,\nDelivery Time: %s\n" % (
-                   self.id, self.weight, self.address, self.city, self.state, self.postal_code, self.delivery_deadline,
-                   self.high_priority, self.delivery_status, self.delivery_time)
+        output = "Package ID: %s,Delivery Address: %s, %s, %s, %s, %s, Delivery Deadline: %s," \
+                 " High Priority?: %s, Delivery Status: %s" % (
+                     self.id, self.weight, self.address, self.city, self.state, self.postal_code,
+                     self.delivery_deadline,
+                     self.high_priority, self.delivery_status)
+        if self.delivery_status == "Delivered":
+            output += ", Delivery Time: %s" % self.delivery_time
+        return output
