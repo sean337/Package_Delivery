@@ -71,3 +71,32 @@ The software's maintainability is enhanced by the clear, modular structure of th
 The space-time complexity for each major block of code and the entire program has been documented using Big-O notation below.
 The primary delivery algorithm, implemented in the deliver_packages function, is O(n^2) as it iterates over
 the list of packages within a loop that iterates over the list of delivery trucks. This results in quadratic time complexity due to the nested loops.
+
+## Time and Space Complexity
+
+### Package Class Methods
+
+| Method        | Time Complexity | Space Complexity |
+|---------------|-----------------|------------------|
+| update_status | O(1)            | O(1)             |
+| __str__       | O(1)            | O(1)             |
+
+### HashMap Class Methods
+
+| Method | Time Complexity | Space Complexity |
+|--------|-----------------|------------------|
+| insert | O(1)            | O(1)             |
+| remove | O(1)            | O(1)             |
+| lookup | O(1)            | O(1)             |
+
+### SimulateDelivery Class Methods
+
+| Method                   | Time Complexity | Space Complexity |
+|--------------------------|-----------------|------------------|
+| csv_to_list              | O(n)            | O(n)             |
+| load_package_map         | O(n)            | O(n)             |
+| generate_lists           | O(n)            | O(n)             |
+| generate_distance_matrix | O(n^2)          | O(n^2)           |
+| find_distance            | O(n)            | O(1)             |
+| load_truck               | O(n)            | O(1)             |
+| deliver_packages         | O(n^2)          | O(n)             |
