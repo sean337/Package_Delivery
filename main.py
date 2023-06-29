@@ -30,9 +30,9 @@ while user_input != "quit":
             print(str(package))
     # This will check the status of an individual package ID a given time
     elif user_input == "2":
-        user_input = input("Enter a package ID: 1 - 41")
+        user_input = input("Enter a package ID: 1 - 40: ")
         selected_package = simulation.package_map.lookup(int(user_input))
-        user_input = input("Enter a time using the form H:M:S")
+        user_input = input("Enter a time using the form H:M:S: ")
         (h, m, s) = user_input.split(":")
         convert_time = datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s))
         selected_package.update_status(convert_time)

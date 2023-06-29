@@ -42,17 +42,50 @@ This algorithm can perform well when the number of packages (n) is not too large
 
 ### Advantages of the chosen algorithm:
 
-At each step, the code makes the 'greedy' choice by choosing the package closest to the truck's current location to deliver next, thus ensuring that the truck always takes the shortest possible route to its next delivery.
-This approach doesn't necessarily result in the shortest route for all deliveries (because a globally optimal solution might sometimes require taking a longer route for the next delivery to get a shorter overall path), 
-but it does give a locally optimal solution at each step, which is why it's considered a 'greedy' algorithm.
+At each step, the algorithm makes the 'greedy' choice by selecting the package closest to the truck's current location 
+for the next delivery. This ensures that the truck always takes the shortest possible route to its next delivery, 
+optimizing efficiency. This strategy is especially useful when dealing with a large number of delivery points, as it 
+circumvents the need for computing a complete delivery route beforehand, which can exponentially increase with the 
+number of delivery points. The greedy algorithm's simplicity and ease of implementation provide a clear advantage. It 
+provides a reasonable approximation for the ideal solution, which would otherwise be computationally expensive to 
+calculate, contributing to better maintainability and readability of the code. Although this approach does not 
+necessarily result in the shortest overall route for all deliveries (because a globally optimal solution might sometimes 
+require a longer route for the next delivery to achieve a shorter overall path), it does offer a locally optimal 
+solution at each step, thus justifying its 'greedy' label.
 
-Alternatively I could have used a dynamic solution to solve this like the 'Held-Karp algorithm'. This would have broken the 
-problem down into smaller subset problems but this is even worse for larger inputs with a complexity of (O(n^2 * 2^n))
+Two alternative solutions to solve the problem could be the 'Held-Karp algorithm' or 'A* Search Algorithm'. The 
+Held-Karp algorithm, is a dynamic programming solution, and would break the problem down into smaller subset problems. It 
+aims to solve the Traveling Salesman Problem exactly, providing a global optimum. However, its time complexity of 
+O(n^2 * 2^n) means it's not ideal for larger inputs. On the other hand, the A* Search Algorithm, is a graph traversal and 
+path search algorithm, that could work as well. It is optimal when the heuristic function is admissible, and often 
+performs well in practice. Its time complexity is O(b^d), where b is the branching factor 
+(the average number of successors per state) and d is the depth of the optimal solution. However, this can vary 
+significantly depending on the specifics of the problem at hand. The A* algorithm also has a significant memory 
+requirement, as it needs to store all generated nodes. It might not be the most suitable for this scenario due to the 
+dynamic nature of the problem, where the state of the graph changes after each delivery. In contrast, the chosen method,
+a 'greedy' version of 'Dijkstra's Algorithm' or the 'Nearest Neighbor algorithm', does not necessarily provide the 
+globally optimal solution, but it is more efficient for this specific scenario. It operates with a time complexity of 
+O(n^2), which is considerably better for larger inputs. It also more directly meets the requirements of the scenario, 
+where a truck must simply find the next shortest route from its current location and does not need to calculate a total 
+optimized route beforehand.
+
+#### References:
+
+[A* Seach Wiki](https://en.wikipedia.org/wiki/A*_search_algorithm)
+
+[Held-Karp Wiki](https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm)
 
 ### Self-Adjusting Data Structures
 
-The application utilizes a self-adjusting hash table to store package information. This structure allows for quick insertion and retrieval of packages, both operations with a time complexity of O(1) on average.
-The hash table may have weaknesses in situations where collisions occur frequently, causing the lookup time to slow down quite a bit. 
+The hash table's key-value pairs enable us to establish a relationship between a package's ID (used as the key) and its 
+corresponding details (the value). Similar to a built-in Python dictionary. This structure allows for quick insertion 
+and retrieval of packages based on their IDs, both operations with a time complexity of O(1) on average.
+The primary relationship managed in the application, the package ID to package details relationship, is made possible 
+through the use of the hash table. When the application needs to update or query the details of a package, it uses the 
+package ID to quickly and directly access the package's data. However it has some limitations. While it's great for 
+direct and fast access, it's not designed to handle complex relationships between different packages, like ordering or 
+hierarchical relationships. Also, in situations where hash collisions occur frequently, the lookup time can slow down, 
+affecting the efficiency.
 
 ### Adaptability
 The application is designed to adapt and scale to an increasing number of packages. The primary delivery algorithm is 
@@ -60,7 +93,8 @@ self-adjusting; it will handle any number of packages or trucks provided to it. 
 
 ### Development Environment
 
-This project was completed in the PyCharm IDE, using the latest version of python 3. No external libraries need to be installed
+This project was completed in the PyCharm IDE, using the latest version of python 3. No external libraries need to be installed.
+This project was created on a 2021 16 inch MacBook Pro M1 Max running macOS Ventura 13.4
 
 ### Software Efficiency and Maintainability
 
