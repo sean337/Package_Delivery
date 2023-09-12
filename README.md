@@ -4,7 +4,7 @@ Author: Sean Lee (010506773)
 
 ### Stated Problem:
 
-The purpose of this program is to implement an algorithm for the Western Governors University Parcel Service that self adjusts itself
+The purpose of this program is to implement an algorithm for a Parcel Service that self adjusts itself
 to find the shortest path for delivering the packages on the truck. There are a total of 40 packages that need to be loaded between 3 trucks
 and is limited to 2 drivers. 
 
